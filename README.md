@@ -1,2 +1,2 @@
 # film-rating
-This repo contains database class project
+This repository contains database class project
