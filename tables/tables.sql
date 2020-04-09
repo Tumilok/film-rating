@@ -61,14 +61,14 @@ create table MovieActor(
 
 create table Ratings(
     UserID number not null,
-    ActorID number not null,
+    MovieID number not null,
     Rating number not null,
     constraint r_users_fk
         foreign key (UserID)
         references Users (UserID),
     constraint r_actors_fk
-        foreign key (ActorID)
-        references Actors (ActorID),
+        foreign key (MovieID)
+        references Movies (MovieID),
     constraint rating_range
         check( rating>=1 and rating <=10)
 );
