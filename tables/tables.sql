@@ -25,7 +25,7 @@ create table Movies(
     MovieID number generated as identity
         constraint movies_pk primary key,
     Title varchar2(90) not null,
-    Descritpion varchar2(200),
+    Description varchar2(200),
     YearOfRelease varchar2(4) not null
 );
 
