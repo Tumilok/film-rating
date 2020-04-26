@@ -19,24 +19,19 @@ public class Actor {
 	}
 	
 	@Id
-    @GeneratedValue
-    @Column(name = "ACTORID", unique = true, nullable = false)
+    @Column(name = "ACTORID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	public Integer getActorID() {
 		return this.actorID;
 	}
 	
-	@Transient
 	public void setActorID(Integer actorID) { this.actorID = actorID; }
 	
-	@Transient
 	public String getFirstname() { return firstname; } 
 	
-	@Transient
 	public void setFirstname(String firstname) { this.firstname=firstname; } 
 	
-	@Transient
 	public String getLastname() { return lastname; } 
 	
-	@Transient
 	public void setLastname(String lastname) { this.lastname=lastname; } 
 }
