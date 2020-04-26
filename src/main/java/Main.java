@@ -16,9 +16,8 @@ import org.hibernate.cfg.Configuration;
         session.beginTransaction();
  
         Actor actor = (Actor) session.load(Actor.class, new Integer(1));
-        
         if(actor != null)
-            System.out.println(actor.getFirstName());
+            System.out.println(actor.getFirstname());
  
         session.close();
         factory.close();

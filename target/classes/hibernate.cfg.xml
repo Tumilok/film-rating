@@ -12,7 +12,7 @@
      
     <property name="show_sql">true</property>
       
-    <mapping class="Actor" />  
-      
+    <mapping class="Actor"/>
+
   </session-factory>
 </hibernate-configuration>
