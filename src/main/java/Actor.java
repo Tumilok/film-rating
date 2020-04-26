@@ -20,6 +20,7 @@ public class Actor {
 	}
 	
 	public Actor(String firstname, String lastname) {
+		this.actorID=getId();
 		this.firstname=firstname;
 		this.lastname=lastname;
 	}
