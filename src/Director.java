@@ -4,18 +4,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-public class Actor {
+public class Director {
     @Id
     @GeneratedValue
-    private int ActorID;
+    private int directorID;
     private String firstname;
     private String lastname;
 
-    public Actor(String firstname, String lastname){
+    public Director(String firstname, String lastname){
         this.firstname = firstname;
         this.lastname = lastname;
     }
 
-    public Actor() {}
+    public Director() {}
 
 }
