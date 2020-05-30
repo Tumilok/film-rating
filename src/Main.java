@@ -4,8 +4,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.metamodel.EntityType;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -59,8 +58,15 @@ public class Main {
         return null;
     }
 
-    private static List<Movie> getMovies() {
-        return getSession().createCriteria(Movie.class).list();
+    private static List<Movie> getMovies(String input) {
+        List<Movie> movies = getSession().createCriteria(Movie.class).list();
+        List<Movie> listToReturn = new ArrayList<>();
+        for (Movie movie: movies) {
+            if (movie.isPartOfTitle(input)) {
+                listToReturn.add(movie);
+            }
+        }
+        return listToReturn;
     }
 
     public static void main(final String[] args) throws Exception {
@@ -70,25 +76,28 @@ public class Main {
             //Actor actor = new Actor("Bill", "Murray");
             //Category category = new Category("Drama");
             //Director director = new Director("Sofia", "Coppola");
-            //Movie movie = new Movie("Lost in Translation","Movie about loneliness in a big city", "2003");
+            //Movie movie = new Movie("Taxi","About cool taxi", "1997");
             //movie.addActor(actor);
             //movie.addCategory(category);
             //User user = new User("example@somemail.com", "12345678", "Bred", "Lonch");
             //Rating rating = new Rating(movie, user, 9, new Date().toString());
-            Transaction transaction = session.beginTransaction();
+            //Transaction transaction = session.beginTransaction();
             //session.save(actor);
             //session.save(category);
             //session.save(director);
             //session.save(movie);
             //session.save(user);
             //session.save(rating);
-            transaction.commit();
+            //transaction.commit();
 
             register("example@cloud.com", "dghmfgm", "Mike", "Simons");
             login("example@somemail.com", "12345678");
-            for (Movie movie: getMovies()) {
+            List<Movie> movies = getMovies("taxi");
+            System.out.println("------------------------------------------");
+            for (Movie movie: movies) {
                 System.out.println(movie.getTitle());
             }
+            System.out.println("------------------------------------------");
 
 
             System.out.println("querying all the managed entities...");

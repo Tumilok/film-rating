@@ -69,4 +69,8 @@ public class Movie {
         categories.add(category);
     }
 
+    public boolean isPartOfTitle(String input) {
+        return title.toLowerCase().contains(input.toLowerCase());
+    }
+
 }
