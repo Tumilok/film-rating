@@ -29,6 +29,34 @@ public class Movie {
 
     public Movie() {}
 
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getYearOfRelease() {
+        return yearOfRelease;
+    }
+
+    public Set<Actor> getActors() {
+        return actors;
+    }
+
+    public Set<Director> getDirectors() {
+        return directors;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
     public void addActor(Actor actor){
         actors.add(actor);
     }
