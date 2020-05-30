@@ -5,6 +5,7 @@ import org.hibernate.cfg.Configuration;
 import javax.persistence.metamodel.EntityType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -67,6 +68,30 @@ public class Main {
             }
         }
         return listToReturn;
+    }
+
+    private static void rateMovie(int movieID, int userId, double rate) {
+        final Session session = getSession();
+        Movie movie = session.get(Movie.class, movieID);
+        User user = session.get(User.class, userId);
+        Rating rating = new Rating(movie, user, rate, new Date().toString());
+        Transaction transaction = session.beginTransaction();
+        session.save(rating);
+        transaction.commit();
+    }
+
+    private static double getMovieRating(int movieId) {
+        List<Rating> ratings = getSession().createCriteria(Rating.class).list();
+        if (ratings.size() == 0) {
+            return 0.0;
+        }
+        double ratingsSum = 0.0;
+        for (Rating rating: ratings) {
+            if (rating.getMovie().getMovieID() == movieId) {
+                ratingsSum += rating.getRating();
+            }
+        }
+        return ratingsSum / ratings.size();
     }
 
     public static void main(final String[] args) throws Exception {
