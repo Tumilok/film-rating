@@ -33,7 +33,7 @@ public class Authentication {
         return false;
     }
 
-    private static User register(String email, String password, String firstName, String lastName) {
+    static User register(String email, String password, String firstName, String lastName) {
         if (isUserExists(email)) {
             return null;
         } else {
