@@ -89,9 +89,14 @@ public class Register extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                //Register register = new Register();
-                //register.setTitle("Rejestracja");
-                //register.setVisible(true);
+                User user = Authentication.register(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
+                if(user!=null) {
+                    dispose();
+                    FilmList filmList = new FilmList();
+                }
+                else {
+                    System.out.println("NULL");
+                }
             }
         });
         contentPanel.add(registerButton);
