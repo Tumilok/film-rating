@@ -1,8 +1,11 @@
 package gui;
 
+import backend.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -66,10 +69,14 @@ public class Login extends JFrame {
         loginButton.setBounds(10, 250, 162, 73);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String userName = email.getText();
-                String password = Login.this.password.getText();
-                dispose();
-                FilmList filmList = new FilmList();
+                User user = Authentication.login(email.getText(), Arrays.toString(Login.this.password.getPassword()));
+                if(user!=null) {
+                    dispose();
+                    FilmList filmList = new FilmList();
+                }
+                else{
+                    System.out.println("NULL");
+                }
             }
         });
         contentPanel.add(loginButton);
