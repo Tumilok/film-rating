@@ -48,8 +48,9 @@ public class Authentication {
 
     static User login(String email, String password) {
         List<User> users = getSession().createCriteria(User.class).list();
-        System.out.println(users);
+        System.out.println(users.size());
         for (User user: users) {
+            System.out.println(user.getFirstName());
             if (user.isThisUser(email, password)) {
                 return user;
             }

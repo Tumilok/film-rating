@@ -94,6 +94,20 @@ public class Main {
         return ratingsSum / ratings.size();
     }
 
+    private static void addMovie(String title, String description, String yearOfRelease) {
+        final Session session = getSession();
+        List<Movie> movies = getSession().createCriteria(Movie.class).list();
+        for (Movie movie: movies) {
+            if (movie.getTitle().equals(title)) {
+                System.out.println("Taki film uż istnieje w bazie");
+                return;
+            }
+        }
+        Transaction transaction = session.beginTransaction();
+        session.save(new Movie(title, description, yearOfRelease));
+        transaction.commit();
+    }
+
     public static void main(final String[] args) throws Exception {
         final Session session = getSession();
         try {
