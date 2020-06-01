@@ -46,7 +46,7 @@ public class FilmList {
             gbc.weighty = 1;
             mainList.add(new JPanel(), gbc);
 
-            List<Movie> movies = Authentication.getMovies();
+            List<Movie> movies = Authentication.getMovies("");
             for(Movie movie : movies){
                 JButton movieButton = new JButton(movie.getTitle());
                 movieButton.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));

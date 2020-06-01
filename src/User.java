@@ -1,3 +1,5 @@
+import org.hibernate.annotations.ColumnTransformer;
+
 import javax.persistence.*;
 
 @Entity

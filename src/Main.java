@@ -4,9 +4,9 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.metamodel.EntityType;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     private static final SessionFactory ourSessionFactory;
@@ -59,53 +59,8 @@ public class Main {
         return null;
     }
 
-    private static List<Movie> getMovies(String input) {
-        List<Movie> movies = getSession().createCriteria(Movie.class).list();
-        List<Movie> listToReturn = new ArrayList<>();
-        for (Movie movie: movies) {
-            if (movie.isPartOfTitle(input)) {
-                listToReturn.add(movie);
-            }
-        }
-        return listToReturn;
-    }
-
-    private static void rateMovie(int movieID, int userId, double rate) {
-        final Session session = getSession();
-        Movie movie = session.get(Movie.class, movieID);
-        User user = session.get(User.class, userId);
-        Rating rating = new Rating(movie, user, rate, new Date().toString());
-        Transaction transaction = session.beginTransaction();
-        session.save(rating);
-        transaction.commit();
-    }
-
-    private static double getMovieRating(int movieId) {
-        List<Rating> ratings = getSession().createCriteria(Rating.class).list();
-        if (ratings.size() == 0) {
-            return 0.0;
-        }
-        double ratingsSum = 0.0;
-        for (Rating rating: ratings) {
-            if (rating.getMovie().getMovieID() == movieId) {
-                ratingsSum += rating.getRating();
-            }
-        }
-        return ratingsSum / ratings.size();
-    }
-
-    private static void addMovie(String title, String description, String yearOfRelease) {
-        final Session session = getSession();
-        List<Movie> movies = getSession().createCriteria(Movie.class).list();
-        for (Movie movie: movies) {
-            if (movie.getTitle().equals(title)) {
-                System.out.println("Taki film uż istnieje w bazie");
-                return;
-            }
-        }
-        Transaction transaction = session.beginTransaction();
-        session.save(new Movie(title, description, yearOfRelease));
-        transaction.commit();
+    private static List<Movie> getMovies() {
+        return getSession().createCriteria(Movie.class).list();
     }
 
     public static void main(final String[] args) throws Exception {
@@ -115,28 +70,25 @@ public class Main {
             //Actor actor = new Actor("Bill", "Murray");
             //Category category = new Category("Drama");
             //Director director = new Director("Sofia", "Coppola");
-            //Movie movie = new Movie("Taxi","About cool taxi", "1997");
+            //Movie movie = new Movie("Lost in Translation","Movie about loneliness in a big city", "2003");
             //movie.addActor(actor);
             //movie.addCategory(category);
             //User user = new User("example@somemail.com", "12345678", "Bred", "Lonch");
             //Rating rating = new Rating(movie, user, 9, new Date().toString());
-            //Transaction transaction = session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             //session.save(actor);
             //session.save(category);
             //session.save(director);
             //session.save(movie);
             //session.save(user);
             //session.save(rating);
-            //transaction.commit();
+            transaction.commit();
 
             register("example@cloud.com", "dghmfgm", "Mike", "Simons");
             login("example@somemail.com", "12345678");
-            List<Movie> movies = getMovies("taxi");
-            System.out.println("------------------------------------------");
-            for (Movie movie: movies) {
+            for (Movie movie: getMovies()) {
                 System.out.println(movie.getTitle());
             }
-            System.out.println("------------------------------------------");
 
 
             System.out.println("querying all the managed entities...");
