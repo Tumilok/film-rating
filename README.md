@@ -8,7 +8,6 @@ Aplikacja służąca do dodawania filmów do bazy oraz ich oceniania przez użyt
 Klasy, które mapują encje bazy danych:
 
  - Actor
- - Category
  - Director
  - Movie
  - Rating
