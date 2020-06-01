@@ -89,8 +89,8 @@ public class Register extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                if (Authentication.register(email.getText(),
-                        Register.this.password.getText(), firstname.getText(), lastname.getText())) {
+                User user = Authentication.register(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
+                if(user!=null) {
                     dispose();
                     FilmList filmList = new FilmList();
                 }

@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -65,7 +64,8 @@ public class Login extends JFrame {
         loginButton.setBounds(10, 250, 162, 73);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Authentication.login(email.getText(), Login.this.password.getText())) {
+                User user = Authentication.login(email.getText(), Login.this.password.getText());
+                if(user!=null) {
                     dispose();
                     FilmList filmList = new FilmList();
                 }

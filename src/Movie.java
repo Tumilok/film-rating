@@ -1,5 +1,8 @@
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Movie {
@@ -26,20 +29,6 @@ public class Movie {
     }
 
     public Movie() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Movie)) return false;
-        Movie movie = (Movie) o;
-        return movieID == movie.movieID &&
-                title.equals(movie.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(movieID, title, description, yearOfRelease, actors, directors, categories);
-    }
 
     public int getMovieID() {
         return movieID;

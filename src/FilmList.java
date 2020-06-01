@@ -7,6 +7,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class FilmList {
@@ -34,21 +36,18 @@ public class FilmList {
         });
     }
 
-    public class TestPane extends JPanel {
+    public static class TestPane extends JPanel {
 
-        private JPanel mainList;
+        private static JPanel mainList;
 
-        public TestPane() {
-            setLayout(new BorderLayout());
-
-            mainList = new JPanel(new GridBagLayout());
+        public void updateList(String filter){
+            mainList.removeAll();
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridwidth = GridBagConstraints.REMAINDER;
             gbc.weightx = 1;
             gbc.weighty = 1;
             mainList.add(new JPanel(), gbc);
-
-            List<Movie> movies = Authentication.getMovies("");
+            List<Movie> movies = Authentication.getMovies(filter);
             for(Movie movie : movies){
                 JButton movieButton = new JButton(movie.getTitle());
                 movieButton.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
@@ -58,6 +57,16 @@ public class FilmList {
                 gbcc.fill = GridBagConstraints.HORIZONTAL;
                 mainList.add(movieButton, gbcc, 0);
             }
+            validate();
+            repaint();
+        }
+
+        public TestPane() {
+            setLayout(new BorderLayout());
+
+            mainList = new JPanel(new GridBagLayout());
+
+            updateList("");
 
             add(new JScrollPane(mainList));
 
@@ -65,17 +74,21 @@ public class FilmList {
             add.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    /*JPanel panel = new JPanel();
-                    panel.add(new JLabel("Hello"));
-                    panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
-                    GridBagConstraints gbc = new GridBagConstraints();
-                    gbc.gridwidth = GridBagConstraints.REMAINDER;
-                    gbc.weightx = 1;
-                    gbc.fill = GridBagConstraints.HORIZONTAL;
-                    mainList.add(panel, gbc, 0);*/
+                    try {
+                        AddFilm register = new AddFilm();
+                        register.setTitle("Rejestracja");
+                        register.setVisible(true);
+                        register.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent windowEvent){
+                                updateList("");
+                            }
+                        });
+                    }
+                    finally{
 
-                    validate();
-                    repaint();
+                        updateList("");
+                    }
                 }
             });
             JTextField textField = new JTextField();
@@ -83,24 +96,7 @@ public class FilmList {
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    mainList.removeAll();
-                    GridBagConstraints gbc = new GridBagConstraints();
-                    gbc.gridwidth = GridBagConstraints.REMAINDER;
-                    gbc.weightx = 1;
-                    gbc.weighty = 1;
-                    mainList.add(new JPanel(), gbc);
-                    List<Movie> filtered_movies = Authentication.getMovies(textField.getText());
-                    for(Movie movie : filtered_movies) {
-                        JButton movieButton = new JButton(movie.getTitle());
-                        movieButton.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
-                        GridBagConstraints gbcc = new GridBagConstraints();
-                        gbcc.gridwidth = GridBagConstraints.REMAINDER;
-                        gbcc.weightx = 1;
-                        gbcc.fill = GridBagConstraints.HORIZONTAL;
-                        mainList.add(movieButton, gbcc, 0);
-                    }
-                    validate();
-                    repaint();
+                    updateList(textField.getText());
                 }
 
                 @Override
