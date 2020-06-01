@@ -1,4 +1,5 @@
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Rating {
@@ -14,22 +15,34 @@ public class Rating {
     private double rating;
     private String date_rated;
 
-    public Rating(Movie movie, User user, double rating, String date){
+    protected Rating() {}
+
+    public Rating(Movie movie, User user, double rating, String date) {
         this.movie = movie;
         this.person = user;
         this.rating = rating;
         this.date_rated = date;
     }
 
-    protected Rating(){}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rating)) return false;
+        Rating rating = (Rating) o;
+        return movie.equals(rating.movie) &&
+                person.equals(rating.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(movie, person);
+    }
 
     public int getRatingID() {
         return ratingID;
     }
 
-    public Movie getMovie() {
-        return movie;
-    }
+    public Movie getMovie() { return movie; }
 
     public void setMovie(Movie movie) {
         this.movie = movie;

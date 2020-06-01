@@ -1,25 +1,39 @@
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 public class Actor {
     @Id
     @GeneratedValue
     private int ActorID;
-    private String firstname;
-    private String lastname;
-
-    public Actor(String firstname, String lastname){
-        this.firstname = firstname;
-        this.lastname = lastname;
-    }
+    private String firstName;
+    private String lastName;
 
     public Actor() {}
 
-    public String getFirstname() { return firstname; }
+    public Actor(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-    public String getLastname() { return lastname; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Actor)) return false;
+        Actor actor = (Actor) o;
+        return firstName.equals(actor.firstName) &&
+                lastName.equals(actor.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
+    }
+
+    public String getFirstName() { return firstName; }
+
+    public String getLastName() { return lastName; }
 
 }

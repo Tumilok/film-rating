@@ -1,28 +1,42 @@
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 public class Director {
     @Id
     @GeneratedValue
     private int directorID;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
-    public Director(String firstname, String lastname){
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public Director(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Director() {}
 
-    public String getFirstname() {
-        return firstname;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Director)) return false;
+        Director director = (Director) o;
+        return firstName.equals(director.firstName) &&
+                lastName.equals(director.lastName);
     }
 
-    public String getLastname(){
-        return lastname;
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName(){
+        return lastName;
     }
 }

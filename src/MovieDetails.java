@@ -2,17 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 
 public class MovieDetails {
-
-    public static void main(String[] args) {
-        Authentication.setUser(Authentication.getSession().get(User.class, 255));
-        Movie movie = Authentication.getSession().get(Movie.class, 252);
-        new MovieDetails(movie);
-    }
 
     private final Movie movie;
 
@@ -26,8 +21,7 @@ public class MovieDetails {
                 } catch (Exception ex) {
                 }
 
-                JFrame frame = new JFrame("Test");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                JFrame frame = new JFrame(movie.getTitle());
                 frame.add(new MovieDetails.TestPane());
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -102,7 +96,7 @@ public class MovieDetails {
             gbPanel0.setConstraints( lbRok, gbcPanel0 );
             pnPanel0.add( lbRok );
 
-            lbOcena = new JLabel( "Ocena: " + Authentication.getMovieRating(movie.getMovieID())  );
+            lbOcena = new JLabel( "Ocena: " + Authentication.getMovieRating(movie));
             lbOcena.setFont(new Font("Tahoma", Font.PLAIN, 17));
             gbcPanel0.gridx = 14;
             gbcPanel0.gridy = 4;
@@ -131,8 +125,10 @@ public class MovieDetails {
             btRate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (Authentication.addRating(movie.getMovieID(), new Double(spnSpinner1.getValue().toString()))) {
-                        lbOcena.setText( "Ocena: " + Authentication.getMovieRating(movie.getMovieID()) );
+                    double rate = new Double(spnSpinner1.getValue().toString());
+                    Rating rating = new Rating(movie, Authentication.getUser(), rate, new Date().toString());
+                    if (Authentication.addRating(rating)) {
+                        lbOcena.setText( "Ocena: " + Authentication.getMovieRating(movie));
                     } else {
                         System.out.println("Something went wrong with rating");
                     }

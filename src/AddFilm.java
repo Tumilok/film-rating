@@ -106,23 +106,23 @@ public class AddFilm extends JFrame {
                 String str = actors.getText();
                 ArrayList<String> actorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
                 List<Actor> movieActors = new ArrayList<>();
-                for(String actor : actorsList){
+                for (String actor: actorsList) {
                     ArrayList<String> name = new ArrayList<>(Arrays.asList(actor.split(" ")));
-                    if(name.size()<2) continue;
-                    String firstname = name.get(0);
-                    String lastname = name.get(1);
-                    System.out.println(firstname + lastname);
+                    if (name.size() < 2) continue;
+                    String firstName = name.get(0);
+                    String lastName = name.get(1);
+                    System.out.println(firstName + " " + lastName);
                     List<Actor> allActors = Authentication.getActors();
                     boolean isNew = true;
-                    for(Actor a : allActors){
-                        if(a.getFirstname().equals(firstname) && a.getLastname().equals(lastname)) {
+                    Actor newActor = new Actor(firstName, lastName);
+                    for (Actor a: allActors) {
+                        if (a.equals(newActor)) {
                             movieActors.add(a);
                             isNew = false;
                             break;
                         }
                     }
-                    if(isNew){
-                        Actor newActor = new Actor(firstname, lastname);
+                    if (isNew) {
                         movieActors.add(newActor);
                         Authentication.addActor(newActor);
                     }
@@ -131,27 +131,34 @@ public class AddFilm extends JFrame {
                 str = directors.getText();
                 ArrayList<String> directorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
                 List<Director> movieDirectors = new ArrayList<>();
-                for(String director : directorsList){
+                for (String director: directorsList) {
                     ArrayList<String> name = new ArrayList<>(Arrays.asList(director.split(" ")));
-                    if(name.size()<2) continue;
-                    String firstname = name.get(0);
-                    String lastname = name.get(1);
+                    if (name.size() < 2) continue;
+                    String firstName = name.get(0);
+                    String lastName = name.get(1);
                     List<Director> allDirectors = Authentication.getDirectors();
                     boolean isNew = true;
-                    for(Director a : allDirectors){
-                        if(a.getFirstname().equals(firstname) && a.getLastname().equals(lastname)) {
-                            movieDirectors.add(a);
+                    Director newDirector = new Director(firstName, lastName);
+                    for (Director d: allDirectors){
+                        if (d.equals(newDirector)) {
+                            movieDirectors.add(d);
                             isNew = false;
                             break;
                         }
                     }
-                    if(isNew){
-                        Director newDirector = new Director(firstname, lastname);
+                    if (isNew) {
                         movieDirectors.add(newDirector);
                         Authentication.addDirector(newDirector);
                     }
                 }
-                Authentication.addMovie(movieTitle.getText(), description.getText(), year.getText(), movieActors, movieDirectors);
+                Movie movie = new Movie(movieTitle.getText(), description.getText(), year.getText());
+                for (Actor actor: movieActors) {
+                    movie.addActor(actor);
+                }
+                for (Director director: movieDirectors) {
+                    movie.addDirector(director);
+                }
+                Authentication.addMovie(movie);
                 dispose();
             }
         });

@@ -68,9 +68,9 @@ public class Login extends JFrame {
         loginButton.setBounds(10, 250, 162, 73);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                User user = null;
+                Boolean isUser = false;
                 try {
-                    user = Authentication.login(email.getText(), Login.this.password.getText());
+                    isUser = Authentication.login(email.getText(), Login.this.password.getText());
                 } catch (GeneralSecurityException generalSecurityException) {
                     generalSecurityException.printStackTrace();
                 } catch (UnsupportedEncodingException unsupportedEncodingException) {
@@ -78,11 +78,11 @@ public class Login extends JFrame {
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-                if(user!=null) {
+                if(isUser) {
                     dispose();
                     FilmList filmList = new FilmList();
                 }
-                else{
+                else {
                     System.out.println("NULL");
                 }
             }

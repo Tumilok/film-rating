@@ -1,8 +1,5 @@
 import javax.persistence.*;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Movie {
@@ -22,13 +19,27 @@ public class Movie {
     @JoinColumn(name = "MovieCategoriesFK")
     private Set<Category> categories = new LinkedHashSet<>();
 
+    public Movie() {}
+
     public Movie(String title, String description, String yearOfRelease){
         this.title = title;
         this.description = description;
         this.yearOfRelease = yearOfRelease;
     }
 
-    public Movie() {}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Movie)) return false;
+        Movie movie = (Movie) o;
+        return title.equals(movie.title) &&
+                yearOfRelease.equals(movie.yearOfRelease);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, yearOfRelease);
+    }
 
     public int getMovieID() {
         return movieID;

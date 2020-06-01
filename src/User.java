@@ -1,6 +1,7 @@
 import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="USERS")
@@ -10,11 +11,7 @@ public class User {
     private int userID;
 
     private String email;
-
-    //@Column
-    //@ColumnTransformer(read = "pgp_sym_decrypt(password, 'mySecretKey')", write = "pgp_sym_encrypt(?, 'mySecretKey')")
     private String password;
-
     private String firstName;
     private String lastName;
 
@@ -25,6 +22,19 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 
     public int getUserID() {

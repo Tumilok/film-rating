@@ -50,6 +50,12 @@ public class FilmList {
             List<Movie> movies = Authentication.getMovies(filter);
             for(Movie movie : movies){
                 JButton movieButton = new JButton(movie.getTitle());
+                movieButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        new MovieDetails(movie);
+                    }
+                });
                 movieButton.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
                 GridBagConstraints gbcc = new GridBagConstraints();
                 gbcc.gridwidth = GridBagConstraints.REMAINDER;

@@ -92,17 +92,17 @@ public class Register extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                User user = null;
+                boolean isUser = false;
                 try {
-                    user = Authentication.register(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
+                    isUser = Authentication.addUser(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
                 } catch (GeneralSecurityException generalSecurityException) {
                     generalSecurityException.printStackTrace();
                 } catch (UnsupportedEncodingException unsupportedEncodingException) {
                     unsupportedEncodingException.printStackTrace();
                 }
-                if(user!=null) {
+                if(isUser) {
                     dispose();
-                    FilmList filmList = new FilmList();
+                    new FilmList();
                 }
                 else {
                     System.out.println("NULL");
