@@ -18,4 +18,8 @@ public class Director {
 
     public Director() {}
 
+    @Override
+    public String toString() {
+        return firstname + ' ' + lastname;
+    }
 }

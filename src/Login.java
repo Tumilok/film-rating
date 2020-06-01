@@ -65,8 +65,7 @@ public class Login extends JFrame {
         loginButton.setBounds(10, 250, 162, 73);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                User user = Authentication.login(email.getText(), Login.this.password.getText());
-                if(user!=null) {
+                if (Authentication.login(email.getText(), Login.this.password.getText())) {
                     dispose();
                     FilmList filmList = new FilmList();
                 }

@@ -18,4 +18,8 @@ public class Actor {
 
     public Actor() {}
 
+    @Override
+    public String toString() {
+        return firstname + ' ' + lastname;
+    }
 }
