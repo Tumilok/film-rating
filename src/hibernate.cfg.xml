@@ -15,11 +15,10 @@
         <!-- DB schema will be updated if needed -->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
-        <mapping class="Actor"/>
-        <mapping class="Category"/>
-        <mapping class="Director"/>
-        <mapping class="Movie"/>
-        <mapping class="User"/>
-        <mapping class="Rating"/>
+        <mapping class="Container.Actor"/>
+        <mapping class="Container.Director"/>
+        <mapping class="Container.Movie"/>
+        <mapping class="Container.User"/>
+        <mapping class="Container.Rating"/>
     </session-factory>
 </hibernate-configuration>
