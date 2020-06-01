@@ -36,7 +36,7 @@ public class Authentication {
         return false;
     }
 
-    static User register(String email, String password, String firstName, String lastName) {
+    public static User register(String email, String password, String firstName, String lastName) {
         if (isUserExists(email)) {
             return null;
         } else {
@@ -49,7 +49,7 @@ public class Authentication {
         }
     }
 
-    static User login(String email, String password) {
+    public static User login(String email, String password) {
         List<User> users = getSession().createCriteria(User.class).list();
         for (User user: users) {
             if (user.isThisUser(email, password)) {
@@ -59,7 +59,7 @@ public class Authentication {
         return null;
     }
 
-    static List<Movie> getMovies(String input) {
+    public static List<Movie> getMovies(String input) {
         List<Movie> movies = getSession().createCriteria(Movie.class).list();
         List<Movie> listToReturn = new ArrayList<>();
         for (Movie movie: movies) {
@@ -70,17 +70,29 @@ public class Authentication {
         return listToReturn;
     }
 
-    private static void rateMovie(int movieID, int userId, double rate) {
+    public static void addRating(int movieID, int userId, double rate) {
         final Session session = getSession();
         Movie movie = session.get(Movie.class, movieID);
         User user = session.get(User.class, userId);
-        Rating rating = new Rating(movie, user, rate, new Date().toString());
+
         Transaction transaction = session.beginTransaction();
-        session.save(rating);
+
+        List<Rating> oldRatings = getSession().createCriteria(Rating.class).list();
+        for (Rating oldRating: oldRatings) {
+            if (oldRating.getPerson().equals(user) && oldRating.getMovie().equals(movie)) {
+                oldRating.setRating(rate);
+                oldRating.setDate_rated(new Date().toString());
+                session.update(oldRating);
+                transaction.commit();
+                return;
+            }
+        }
+        Rating newRating = new Rating(movie, user, rate, new Date().toString());
+        session.save(newRating);
         transaction.commit();
     }
 
-    private static double getMovieRating(int movieId) {
+    public static double getMovieRating(int movieId) {
         List<Rating> ratings = getSession().createCriteria(Rating.class).list();
         if (ratings.size() == 0) {
             return 0.0;
@@ -94,7 +106,7 @@ public class Authentication {
         return ratingsSum / ratings.size();
     }
 
-    private static void addMovie(String title, String description, String yearOfRelease) {
+    public static void addMovie(String title, String description, String yearOfRelease) {
         final Session session = getSession();
         List<Movie> movies = getSession().createCriteria(Movie.class).list();
         for (Movie movie: movies) {

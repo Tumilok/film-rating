@@ -1,6 +1,7 @@
 import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="USERS")
@@ -25,6 +26,20 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return userID == user.userID &&
+                email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, email);
     }
 
     public int getUserID() {
