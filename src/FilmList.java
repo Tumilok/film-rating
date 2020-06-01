@@ -1,41 +1,98 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
+
+import java.util.List;
 
 public class FilmList {
 
-    private JFrame frame;
-    private JTextField textField;
-
-    public FilmList() {
-        initialize();
-        this.frame.setVisible(true);
+    public static void main(String[] args) {
+        new FilmList();
     }
 
-    private void initialize() {
-        frame = new JFrame();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setBounds(screenSize.width/2-442, screenSize.height/2-322, 884, 644);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+    public FilmList() {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception ex) {
+                }
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(41, 514, 787, -470);
-        frame.getContentPane().add(scrollPane);
+                JFrame frame = new JFrame("Test");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.add(new TestPane());
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+    }
 
-        JButton btnDodajFilm = new JButton("Dodaj film");
-        btnDodajFilm.setBounds(201, 544, 117, 40);
-        btnDodajFilm.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        frame.getContentPane().add(btnDodajFilm);
+    public class TestPane extends JPanel {
 
-        textField = new JTextField();
-        textField.setBounds(482, 544, 230, 42);
-        frame.getContentPane().add(textField);
-        textField.setColumns(10);
+        private JPanel mainList;
 
-        JLabel lblSzukajFilmu = new JLabel("Szukaj filmu:");
-        lblSzukajFilmu.setFont(new Font("Tahoma", Font.PLAIN, 17));
-        lblSzukajFilmu.setBounds(359, 548, 113, 27);
-        frame.getContentPane().add(lblSzukajFilmu);
+        public TestPane() {
+            setLayout(new BorderLayout());
+
+            mainList = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            mainList.add(new JPanel(), gbc);
+
+            List<Movie> movies = Authentication.getMovies();
+            for(Movie movie : movies){
+                JButton movieButton = new JButton(movie.getTitle());
+                movieButton.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
+                GridBagConstraints gbcc = new GridBagConstraints();
+                gbcc.gridwidth = GridBagConstraints.REMAINDER;
+                gbcc.weightx = 1;
+                gbcc.fill = GridBagConstraints.HORIZONTAL;
+                mainList.add(movieButton, gbcc, 0);
+            }
+
+            add(new JScrollPane(mainList));
+
+            JButton add = new JButton("Dodaj film");
+            add.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    /*JPanel panel = new JPanel();
+                    panel.add(new JLabel("Hello"));
+                    panel.setBorder(new MatteBorder(0, 0, 1, 0, Color.GRAY));
+                    GridBagConstraints gbc = new GridBagConstraints();
+                    gbc.gridwidth = GridBagConstraints.REMAINDER;
+                    gbc.weightx = 1;
+                    gbc.fill = GridBagConstraints.HORIZONTAL;
+                    mainList.add(panel, gbc, 0);*/
+
+                    validate();
+                    repaint();
+                }
+            });
+            JTextField textField = new JTextField();
+            textField.setColumns(10);
+
+            JLabel lblSzukajFilmu = new JLabel("Szukaj filmu:");
+            lblSzukajFilmu.setFont(new Font("Tahoma", Font.PLAIN, 17));
+
+            FlowLayout bottomlayout = new FlowLayout();
+            JPanel bottom = new JPanel(bottomlayout);
+            bottom.add(add);
+            bottom.add(lblSzukajFilmu);
+            bottom.add(textField);
+            add(bottom, BorderLayout.SOUTH);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(600, 600);
+        }
     }
 }
