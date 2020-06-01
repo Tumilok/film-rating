@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 
 public class Register extends JFrame {
 
@@ -89,7 +92,14 @@ public class Register extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                User user = Authentication.register(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
+                User user = null;
+                try {
+                    user = Authentication.register(email.getText(), Register.this.password.getText(), firstname.getText(), lastname.getText());
+                } catch (GeneralSecurityException generalSecurityException) {
+                    generalSecurityException.printStackTrace();
+                } catch (UnsupportedEncodingException unsupportedEncodingException) {
+                    unsupportedEncodingException.printStackTrace();
+                }
                 if(user!=null) {
                     dispose();
                     FilmList filmList = new FilmList();

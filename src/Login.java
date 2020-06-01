@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 
 public class Login extends JFrame {
 
@@ -64,7 +68,16 @@ public class Login extends JFrame {
         loginButton.setBounds(10, 250, 162, 73);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                User user = Authentication.login(email.getText(), Login.this.password.getText());
+                User user = null;
+                try {
+                    user = Authentication.login(email.getText(), Login.this.password.getText());
+                } catch (GeneralSecurityException generalSecurityException) {
+                    generalSecurityException.printStackTrace();
+                } catch (UnsupportedEncodingException unsupportedEncodingException) {
+                    unsupportedEncodingException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 if(user!=null) {
                     dispose();
                     FilmList filmList = new FilmList();

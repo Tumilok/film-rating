@@ -8,6 +8,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.AlgorithmParameters;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
 public class Authentication {
     private static final SessionFactory ourSessionFactory;
 
@@ -36,7 +50,13 @@ public class Authentication {
         return false;
     }
 
-    public static User register(String email, String password, String firstName, String lastName) {
+    public static User register(String email, String password, String firstName, String lastName) throws GeneralSecurityException, UnsupportedEncodingException {
+        byte[] salt = new String("12345678").getBytes();
+        int iterationCount = 40000;
+        int keyLength = 128;
+        SecretKeySpec key = createSecretKey(password.toCharArray(),
+                salt, iterationCount, keyLength);
+        password = encrypt(password, key);
         if (isUserExists(email)) {
             return null;
         } else {
@@ -49,10 +69,18 @@ public class Authentication {
         }
     }
 
-    public static User login(String email, String password) {
+    public static User login(String email, String password) throws GeneralSecurityException, IOException {
+        byte[] salt = new String("12345678").getBytes();
+        int iterationCount = 40000;
+        int keyLength = 128;
+        SecretKeySpec key = createSecretKey(password.toCharArray(),
+                salt, iterationCount, keyLength);
         List<User> users = getSession().createCriteria(User.class).list();
         for (User user: users) {
-            if (user.isThisUser(email, password)) {
+            System.out.println(user.getPassword());
+            String user_password = decrypt(user.getPassword(), key);
+            System.out.println(password);
+            if (password.equals(user_password) && user.getEmail().equals(email)) {
                 return user;
             }
         }
@@ -146,54 +174,41 @@ public class Authentication {
         transaction.commit();
     }
 
-    public static void main(final String[] args) throws Exception {
-        final Session session = getSession();
-        try {
-
-            //Actor actor = new Actor("Bill", "Murray");
-            //Category category = new Category("Drama");
-            //Director director = new Director("Sofia", "Coppola");
-            //Movie movie = new Movie("Taxi","About cool taxi", "1997");
-            //movie.addActor(actor);
-            //movie.addCategory(category);
-            //User user = new User("example@somemail.com", "12345678", "Bred", "Lonch");
-            //Rating rating = new Rating(movie, user, 9, new Date().toString());
-            //Transaction transaction = session.beginTransaction();
-            //session.save(actor);
-            //session.save(category);
-            //session.save(director);
-            //session.save(movie);
-            //session.save(user);
-            //session.save(rating);
-            //transaction.commit();
-
-            register("example@cloud.com", "dghmfgm", "Mike", "Simons");
-            login("example@somemail.com", "12345678");
-            List<Movie> movies = getMovies("taxi");
-            System.out.println("------------------------------------------");
-            for (Movie movie: movies) {
-                System.out.println(movie.getTitle());
-            }
-            System.out.println("------------------------------------------");
-
-
-            System.out.println("querying all the managed entities...");
-            final Metamodel metamodel = session.getSessionFactory().getMetamodel();
-            for (EntityType<?> entityType : metamodel.getEntities()) {
-                final String entityName = entityType.getName();
-                final Query query = session.createQuery("from " + entityName);
-                System.out.println("executing: " + query.getQueryString());
-                for (Object o : query.list()) {
-                    System.out.println("  " + o);
-                }
-            }
-        } finally {
-            session.close();
-        }
-    }
-
     public static List<Director> getDirectors() {
         List<Director> directors = getSession().createCriteria(Director.class).list();
         return directors;
+    }
+
+    private static SecretKeySpec createSecretKey(char[] password, byte[] salt, int iterationCount, int keyLength) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+        PBEKeySpec keySpec = new PBEKeySpec(password, salt, iterationCount, keyLength);
+        SecretKey keyTmp = keyFactory.generateSecret(keySpec);
+        return new SecretKeySpec(keyTmp.getEncoded(), "AES");
+    }
+
+    private static String encrypt(String property, SecretKeySpec key) throws GeneralSecurityException, UnsupportedEncodingException {
+        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        pbeCipher.init(Cipher.ENCRYPT_MODE, key);
+        AlgorithmParameters parameters = pbeCipher.getParameters();
+        IvParameterSpec ivParameterSpec = parameters.getParameterSpec(IvParameterSpec.class);
+        byte[] cryptoText = pbeCipher.doFinal(property.getBytes("UTF-8"));
+        byte[] iv = ivParameterSpec.getIV();
+        return base64Encode(iv) + ":" + base64Encode(cryptoText);
+    }
+
+    private static String base64Encode(byte[] bytes) {
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    private static String decrypt(String string, SecretKeySpec key) throws ArrayIndexOutOfBoundsException, GeneralSecurityException, IOException {
+        String iv = string.split(":")[0];
+        String property = string.split(":")[1];
+        Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(base64Decode(iv)));
+        return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
+    }
+
+    private static byte[] base64Decode(String property) throws IOException {
+        return Base64.getDecoder().decode(property);
     }
 }

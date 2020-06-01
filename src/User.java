@@ -43,6 +43,10 @@ public class User {
         return lastName;
     }
 
+    public String getPassword(){
+        return password;
+    }
+
     public boolean isThisUser(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
     }
