@@ -104,65 +104,70 @@ public class AddFilm extends JFrame {
         registerButton.setFont(new Font("Tahoma", Font.PLAIN, 26));
         registerButton.setBounds(250-81, 550, 162, 73);
         registerButton.addActionListener(e -> {
-            String str = actors.getText();
-            ArrayList<String> actorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
-            List<Actor> movieActors = new ArrayList<>();
-            for (String actor: actorsList) {
-                ArrayList<String> name = new ArrayList<>(Arrays.asList(actor.split(" ")));
-                if (name.size() < 2) continue;
-                List<Actor> allActors = DataProvider.getActors();
-                boolean isNew = true;
-                Actor newActor = new Actor(name.get(0), name.get(1));
-                for (Actor a: allActors) {
-                    if (a.equals(newActor)) {
-                        movieActors.add(a);
-                        isNew = false;
-                        break;
+            if(movieTitle.getText().equals("") || description.getText().equals("") || actors.equals("")
+                    || directors.equals("") || year.equals(""))
+                JOptionPane.showMessageDialog(contentPanel, "Niepoprawne dane");
+            else {
+                String str = actors.getText();
+                ArrayList<String> actorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
+                List<Actor> movieActors = new ArrayList<>();
+                for (String actor : actorsList) {
+                    ArrayList<String> name = new ArrayList<>(Arrays.asList(actor.split(" ")));
+                    if (name.size() < 2) continue;
+                    List<Actor> allActors = DataProvider.getActors();
+                    boolean isNew = true;
+                    Actor newActor = new Actor(name.get(0), name.get(1));
+                    for (Actor a : allActors) {
+                        if (a.equals(newActor)) {
+                            movieActors.add(a);
+                            isNew = false;
+                            break;
+                        }
+                    }
+                    if (isNew) {
+                        movieActors.add(newActor);
+                        if (!DataProvider.addActor(newActor)) {
+                            System.out.println("Oops, Something wend wrong with adding new Actor");
+                        }
                     }
                 }
-                if (isNew) {
-                    movieActors.add(newActor);
-                    if (!DataProvider.addActor(newActor)) {
-                        System.out.println("Oops, Something wend wrong with adding new Actor");
-                    }
-                }
-            }
 
-            str = directors.getText();
-            ArrayList<String> directorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
-            List<Director> movieDirectors = new ArrayList<>();
-            for (String director: directorsList) {
-                ArrayList<String> name = new ArrayList<>(Arrays.asList(director.split(" ")));
-                if (name.size() < 2) continue;
-                List<Director> allDirectors = DataProvider.getDirectors();
-                boolean isNew = true;
-                Director newDirector = new Director(name.get(0), name.get(1));
-                for (Director d: allDirectors){
-                    if (d.equals(newDirector)) {
-                        movieDirectors.add(d);
-                        isNew = false;
-                        break;
+                str = directors.getText();
+                ArrayList<String> directorsList = new ArrayList<>(Arrays.asList(str.split(", ")));
+                List<Director> movieDirectors = new ArrayList<>();
+                for (String director : directorsList) {
+                    ArrayList<String> name = new ArrayList<>(Arrays.asList(director.split(" ")));
+                    if (name.size() < 2) continue;
+                    List<Director> allDirectors = DataProvider.getDirectors();
+                    boolean isNew = true;
+                    Director newDirector = new Director(name.get(0), name.get(1));
+                    for (Director d : allDirectors) {
+                        if (d.equals(newDirector)) {
+                            movieDirectors.add(d);
+                            isNew = false;
+                            break;
+                        }
+                    }
+                    if (isNew) {
+                        movieDirectors.add(newDirector);
+                        if (!DataProvider.addDirector(newDirector)) {
+                            System.out.println("Oops, Something wend wrong with adding new Director");
+                        }
                     }
                 }
-                if (isNew) {
-                    movieDirectors.add(newDirector);
-                    if (!DataProvider.addDirector(newDirector)) {
-                        System.out.println("Oops, Something wend wrong with adding new Director");
-                    }
-                }
-            }
 
-            Movie movie = new Movie(movieTitle.getText(), description.getText(), year.getText());
-            for (Actor actor: movieActors) {
-                movie.addActor(actor);
+                Movie movie = new Movie(movieTitle.getText(), description.getText(), year.getText());
+                for (Actor actor : movieActors) {
+                    movie.addActor(actor);
+                }
+                for (Director director : movieDirectors) {
+                    movie.addDirector(director);
+                }
+                if (!DataProvider.addMovie(movie)) {
+                    System.out.println("Oops, Something wend wrong with adding new Movie");
+                }
+                dispose();
             }
-            for (Director director: movieDirectors) {
-                movie.addDirector(director);
-            }
-            if (!DataProvider.addMovie(movie)) {
-                System.out.println("Oops, Something wend wrong with adding new Movie");
-            }
-            dispose();
         });
         contentPanel.add(registerButton);
 

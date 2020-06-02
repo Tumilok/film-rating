@@ -89,19 +89,22 @@ public class Register extends JFrame {
         registerButton.setFont(new Font("Tahoma", Font.PLAIN, 26));
         registerButton.setBounds(10, 450, 162, 73);
         registerButton.addActionListener(e -> {
-            dispose();
             boolean isUser = false;
             try {
-
-                byte[] salt = "12345678".getBytes();
-                int iterationCount = 40000;
-                int keyLength = 128;
-                SecretKeySpec key = DataProvider.createSecretKey(this.password.getText().toCharArray(),
-                        salt, iterationCount, keyLength);
-                User user = new User(email.getText(), DataProvider.encrypt(
-                        this.password.getText(), key), firstName.getText(), lastName.getText());
-                isUser = DataProvider.addUser(user);
-            } catch (GeneralSecurityException | UnsupportedEncodingException generalSecurityException) {
+                if(!this.password.getText().equals("") && !this.firstName.getText().equals("")
+                        && !this.lastName.getText().equals("") && !this.email.getText().equals("")
+                        && this.email.getText().contains("@") && this.email.getText().contains(".")
+                        && this.password.getText().length()>6){
+                    byte[] salt = "12345678".getBytes();
+                    int iterationCount = 40000;
+                    int keyLength = 128;
+                    SecretKeySpec key = DataProvider.createSecretKey(this.password.getText().toCharArray(),
+                            salt, iterationCount, keyLength);
+                    User user = new User(email.getText(), DataProvider.encrypt(
+                            this.password.getText(), key), firstName.getText(), lastName.getText());
+                    isUser = DataProvider.addUser(user);
+                }
+            } catch (GeneralSecurityException generalSecurityException) {
                 generalSecurityException.printStackTrace();
             }
             if(isUser) {
@@ -109,7 +112,7 @@ public class Register extends JFrame {
                 new FilmList();
             }
             else {
-                System.out.println("NULL");
+                JOptionPane.showMessageDialog(contentPanel, "Niepoprawne dane");
             }
         });
         contentPanel.add(registerButton);

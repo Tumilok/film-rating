@@ -7,12 +7,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import DataProvider.DataProvider;
@@ -23,9 +18,7 @@ public class Login extends JFrame {
     private JTextField email;
     private JPasswordField password;
 
-    public Login() {
-        this.setVisible(true);
-    }
+    public Login() { }
 
     public void showLoginWindow() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,8 +62,9 @@ public class Login extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 boolean isUser = false;
                 try {
-                    isUser = DataProvider.login(email.getText(), Login.this.password.getText());
-                } catch (GeneralSecurityException | IOException generalSecurityException) {
+                    if(!email.getText().equals("") && !Login.this.password.getText().equals(""))
+                        isUser = DataProvider.login(email.getText(), Login.this.password.getText());
+                } catch (GeneralSecurityException generalSecurityException) {
                     generalSecurityException.printStackTrace();
                 }
                 if(isUser) {
@@ -78,7 +72,7 @@ public class Login extends JFrame {
                     new FilmList();
                 }
                 else {
-                    System.out.println("NULL");
+                    JOptionPane.showMessageDialog(contentPanel, "Niepoprawne dane");
                 }
             }
         });
