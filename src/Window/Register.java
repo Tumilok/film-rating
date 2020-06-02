@@ -30,7 +30,6 @@ public class Register extends JFrame {
         setContentPane(contentPanel);
         contentPanel.setLayout(null);
         setTitle("Registration");
-        setVisible(true);
     }
 
     public void showRegisterWindow() {
@@ -123,7 +122,7 @@ public class Register extends JFrame {
         loginButton.addActionListener(e -> {
             dispose();
             Login login = new Login();
-            login.setTitle("Window.Login");
+            login.showLoginWindow();
             login.setVisible(true);
         });
         contentPanel.add(loginButton);

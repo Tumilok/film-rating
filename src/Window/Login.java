@@ -29,6 +29,7 @@ public class Login extends JFrame {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPanel);
         contentPanel.setLayout(null);
+        setTitle("Login");
 
         email = new JTextField();
         email.setFont(new Font("Tahoma", Font.PLAIN, 32));
@@ -58,22 +59,20 @@ public class Login extends JFrame {
         JButton loginButton = new JButton("Zaloguj się");
         loginButton.setFont(new Font("Tahoma", Font.PLAIN, 26));
         loginButton.setBounds(10, 250, 162, 73);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                boolean isUser = false;
-                try {
-                    if(!email.getText().equals("") && !Login.this.password.getText().equals(""))
-                        isUser = DataProvider.login(email.getText(), Login.this.password.getText());
-                } catch (GeneralSecurityException generalSecurityException) {
-                    generalSecurityException.printStackTrace();
-                }
-                if(isUser) {
-                    dispose();
-                    new FilmList();
-                }
-                else {
-                    JOptionPane.showMessageDialog(contentPanel, "Niepoprawne dane");
-                }
+        loginButton.addActionListener(e -> {
+            boolean isUser = false;
+            try {
+                if(!email.getText().equals("") && !Login.this.password.getText().equals(""))
+                    isUser = DataProvider.login(email.getText(), Login.this.password.getText());
+            } catch (GeneralSecurityException generalSecurityException) {
+                generalSecurityException.printStackTrace();
+            }
+            if(isUser) {
+                dispose();
+                new FilmList();
+            }
+            else {
+                JOptionPane.showMessageDialog(contentPanel, "Niepoprawne dane");
             }
         });
         contentPanel.add(loginButton);
@@ -81,12 +80,11 @@ public class Login extends JFrame {
         JButton registerButton = new JButton("Zarejestruj się");
         registerButton.setFont(new Font("Tahoma", Font.PLAIN, 26));
         registerButton.setBounds(318, 250, 162, 73);
-        registerButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new Register().showRegisterWindow();
-            }
+        registerButton.addActionListener(e -> {
+            dispose();
+            Register register = new Register();
+            register.showRegisterWindow();
+            register.setVisible(true);
         });
         contentPanel.add(registerButton);
 
