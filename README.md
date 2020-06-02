@@ -1,6 +1,11 @@
 # film-rating
 This repository contains database class project
 
+# Autorzy
+
+- Uladzislau Tumilovich
+- Szymon Świerk
+
 # Opis projektu
 
 Aplikacja służąca do dodawania filmów do bazy oraz ich oceniania przez użytkowników. Połączona jest z bazą Oracle SQL na serwerze AGH. Został użyty framework Hibernate.
